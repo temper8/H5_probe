@@ -10,22 +10,24 @@ LIBSZ   =  C:/HDF_Group/HDF5/1.12.1/lib/libsz.lib
 
 # ------ No machine-specific paths/variables after this  -----
 
-FORTRANLIB=-I$(HDF5)/include/static $(HDF5)/lib/libhdf5_fortran.lib  $(HDF5)/lib/hdf5_f90cstub.lib $(HDF5)/lib/libaec.lib 
+#FORTRANLIB=-I"$(HDF5)/include/static"
+FORTRANLIB=-I"$(HDF5)/include/shared"
 FSOURCE = dsetexample fileexample
 OBJECTS = dsetexample.o fileexample.o
 
 FLAGS   = -c 
-LIBSHDF   =  $(FORTRANLIB) $(HDF5)/lib/libhdf5.lib  $(HDF5)/lib/hdf5_tools.lib
+LIBSHDF   =  $(HDF5)/lib/hdf5_fortran.lib
+#LIBSHDF   =  $(HDF5)/lib/libhdf5_fortran.lib
 LIBZZ       = $(LIBZ) $(LIBSZ) -lm
 
 
-
+   
 #Compiler
 FC = ifort
 #FCFLAGS = -Od  #disable optimisation
 #FCFLAGS = -Od  -C /debug:full /traceback /Qcoarray:shared /Qcoarray-num-images:4
 #FCFLAGS = -Ofast  /Qopenmp /Qcoarray:shared 
-FCFLAGS = -Ofast  -static#The aggressive optimizations
+FCFLAGS = -Ofast  #The aggressive optimizations
 #FCFLAGS = -Ofast /Qparallel /Qopenmp /Qopt-report #the auto-parallelizer
 #FCFLAGS = -Ofast /Qparallel /Qopenmp #the auto-parallelizer
 
@@ -37,9 +39,20 @@ objects = converter.obj
 converter : $(objects)
     $(FC) -o converter.exe $(FCFLAGS) $(objects) 
 
-h5ex : $(objects)
-    $(FC) -o h5ex_d_rdwr.exe $(FCFLAGS) h5ex_d_rdwr.f90  $(LIBSHDF)  $(LIBZZ) 
-    # /link /NODEFAULTLIB:"msvcrt.lib"
+objects_h5 = h5_rdwt.obj h5_crtdat.obj
+
+h5_rdwt : $(objects_h5)
+    $(FC) -o h5_rdwt.exe $(FCFLAGS) h5_rdwt.obj  $(LIBSHDF) 
+
+h5_crtdat : $(objects_h5)
+    $(FC) -o h5_crtdat.exe $(FCFLAGS)  h5_crtdat.obj  $(LIBSHDF) 
+
+h5_rdwt.obj: h5_rdwt.f90
+	 $(FC)  $(FORTRANLIB) -c  h5_rdwt.f90 
+
+h5_crtdat.obj: h5_crtdat.f90
+	 $(FC)  $(FORTRANLIB) -c h5_crtdat.f90 
+
 
 .f90.obj: 
     $(COMPILE) $<
