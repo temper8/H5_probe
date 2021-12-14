@@ -9,3 +9,9 @@ with h5py.File('random.hdf5', 'w') as f:
     zset = f.create_dataset("complex_float64", data=Z)
 
 print('write random.hdf5')
+
+with h5py.File('f_complex.h5', 'r') as f:
+    dset = f['cmplx']
+    print(dset[:])
+    dset = f['array_cmplx']
+    print(dset[:])
