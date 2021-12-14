@@ -133,3 +133,5 @@ data/
 *.exe
 *.obj
 *.mod
+*.h5
+*.hdf5
