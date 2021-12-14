@@ -54,8 +54,12 @@ h5_crtdat.obj: h5_crtdat.f90
 	 $(FC)  $(FORTRANLIB) -c h5_crtdat.f90 
 
 
-complex : compound_complex_fortran2003.f90 
+compound_complex : compound_complex_fortran2003.f90 
     $(FC) -o compound_complex.exe $(FCFLAGS) $(FORTRANLIB) compound_complex_fortran2003.f90  $(LIBSHDF) 
+
+complex : complex.f90 
+    $(FC) -o cmplx.exe $(FCFLAGS) $(FORTRANLIB) complex.f90  $(LIBSHDF) 
+
 
 
 .f90.obj: 
