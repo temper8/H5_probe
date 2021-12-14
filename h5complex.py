@@ -8,3 +8,4 @@ with h5py.File('random.hdf5', 'w') as f:
     dset = f.create_dataset("random_float64", data=arr)
     zset = f.create_dataset("complex_float64", data=Z)
 
+print('write random.hdf5')
